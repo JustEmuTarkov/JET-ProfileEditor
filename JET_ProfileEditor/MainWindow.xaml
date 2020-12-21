@@ -1,0 +1,740 @@
+﻿<mah:MetroWindow x:Class="JET_ProfileEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:local="clr-namespace:JET_ProfileEditor"
+        mc:Ignorable="d"
+        GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+        BorderThickness="2"
+        SaveWindowPosition="True"
+        Closing="MetroWindow_Closing"
+        Title="JET Profile Editor by TheMaoci" MinHeight="600" MinWidth="800" Loaded="Window_Loaded" >
+    <Window.Resources>
+        <local:PathBoolConverter x:Key="PathBoolConverter" />
+        <local:ProfileBoolConverter x:Key="ProfileBoolConverter" />
+        <local:ButtonBoolConverter x:Key="ButtonBoolConverter"/>
+        <local:ProfileSideConverter x:Key="ProfileSideConverter"/>
+        <local:ProfileLevelConverter x:Key="ProfileLevelConverter"/>
+        <local:QuestEmptyBoolConverter x:Key="QuestEmptyBoolConverter"/>
+        <local:RevertedQuestEmptyBoolConverter x:Key="RevertedQuestEmptyBoolConverter"/>
+        <local:ExpToLevelConverter x:Key="ExpToLevelConverter"/>
+        <local:ItemSelectorConverter x:Key="ItemSelectorConverter"/>
+        <local:ItemAddButtonConverter x:Key="ItemAddButtonConverter"/>
+        <local:ProfileVisibilityConverter x:Key="ProfileVisibilityConverter"/>
+        <local:BackupDateConverter x:Key="BackupDateConverter"/>
+    </Window.Resources>    
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <Button Content="{Binding locale[button_settings]}" Click="Button_Click">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconFontAwesome Width="22"
+                                        Height="22"
+                                        VerticalAlignment="Center"
+                                        Kind="WrenchSolid" />
+                            <TextBlock Margin="4 0 0 0"
+                         VerticalAlignment="Center"
+                         Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="0,5" FontSize="20">
+            <Label.Content>
+                <TextBlock TextWrapping="Wrap" Text="{Binding locale[profile_empty]}" TextAlignment="Center"/>
+            </Label.Content>
+        </Label>
+        <TabControl x:Name="tabControl" Grid.Row="0" Margin="10,5" TabStripPlacement="Left" Controls:TabControlHelper.Underlined="TabPanel" Visibility="{Binding Path=Character, Converter={StaticResource ProfileVisibilityConverter}}">
+            <TabItem Header="{Binding locale[tab_info_title]}" x:Name="tabinfo" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_info_id]}"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox x:Name="infotab_ID" Grid.Column="1" Grid.Row="0" TextWrapping="Wrap" Text="{Binding Character.Aid}" Margin="10,0" VerticalAlignment="Center" IsEnabled="False"/>
+                    <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_info_nickname]}"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox x:Name="infotab_Nickname" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Text="{Binding Character.Info.Nickname, Mode=TwoWay}" Margin="10,0" VerticalAlignment="Center"/>
+                    <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_info_side]}"/>
+                        </Label.Content>
+                    </Label>
+                    <ComboBox x:Name="infotab_Side" Grid.Column="1" Grid.Row="2" Margin="10,0" VerticalAlignment="Center" SelectedItem="{Binding Character.Info.Side, Mode=TwoWay}" SelectionChanged="infotab_Side_SelectionChanged"/>
+                    <Label Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_info_voice]}"/>
+                        </Label.Content>
+                    </Label>
+                    <ComboBox x:Name="infotab_Voice" Grid.Column="1" Grid.Row="3" Margin="10,0" VerticalAlignment="Center" ItemsSource="{ Binding Character.Info.Side, Converter={StaticResource ProfileSideConverter}}" SelectedItem="{Binding Character.Info.Voice, Mode=TwoWay}"/>
+                    <Label Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_info_level]}"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox x:Name="infotab_Level" Grid.Column="1" Grid.Row="4" TextWrapping="Wrap" Text="{ Binding Character.Info.Experience, Converter={StaticResource ProfileLevelConverter}, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumberValidationTextBox" Margin="10,0" VerticalAlignment="Center" TextChanged="infotab_Level_TextChanged"/>
+                    <Label Grid.Column="0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_info_experience]}"/>
+                        </Label.Content>
+                    </Label>
+                    <Grid Grid.Column="1" Grid.Row="5" Margin="10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding ElementName=infotab_Experience, Path=Value, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0" MinWidth="70"/>
+                        <Slider x:Name="infotab_Experience" Grid.Column="1" Maximum="14199002" TickPlacement="BottomRight" TickFrequency="300000" Value="{Binding Character.Info.Experience, Mode=TwoWay}" VerticalAlignment="Center" Margin="2,0"/>
+                    </Grid>
+                    <Label Grid.Column="0" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_info_gameversion]}"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBox x:Name="infotab_GameVersion" Grid.Column="1" Grid.Row="6" TextWrapping="Wrap" Text="{Binding Character.Info.GameVersion}" Margin="10,0" VerticalAlignment="Center" IsEnabled="False"/>
+                    <Label Grid.Column="0" Grid.Row="7" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_info_bigpockets]}"/>
+                        </Label.Content>
+                    </Label>
+                    <mah:ToggleSwitch x:Name="BigPocketsSwitcher" Grid.Column="1" Grid.Row="7" HorizontalAlignment="Stretch" Margin="10,0" OnContent="" OffContent="" Foreground="{DynamicResource MahApps.Brushes.Accent}" Toggled="BigPocketsSwitcher_Toggled"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_merchants_title]}" x:Name="tabmerchants" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="merchantsGrid" Grid.Row="0" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_merchants_name], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_merchants_enabled], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox x:Name="merchantDisplay" IsChecked="{Binding Path=Display}" Checked="merchantDisplay_Checked" Unchecked="merchantDisplay_Checked"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_merchants_level], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox x:Name="merchantLevel" ItemsSource="{Binding Path=Levels}" DisplayMemberPath="level" SelectedValuePath="level" SelectedValue="{Binding Path=CurrentLevel}" SelectionChanged="merchantLevel_SelectionChanged"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button x:Name="MerchantsMaximumButton" Content="{Binding locale[tab_hideout_maximumbutton]}" Grid.Row="1" HorizontalAlignment="Center" Margin="10,10,10,0" Width="200" Height="30" Click="MerchantsMaximumButton_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_quests_title]}" x:Name="tabquests" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="questsGrid" Grid.Row="0" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_quests_trader], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=trader}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_quests_name], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_quests_status], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding ElementName=QuestsStatusesBox, Path=ItemsSource}" SelectedItem="{Binding Path=status}" SelectionChanged="ComboBox_SelectionChanged"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Grid.Row="0" FontWeight="Bold" FontSize="18" Visibility="{ Binding ElementName=questsGrid, Path=ItemsSource.Count, Converter={StaticResource QuestEmptyBoolConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_quests_nodata]}"/>
+                        </Label.Content>
+                    </Label>
+                    <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0" Visibility="{ Binding ElementName=questsGrid, Path=ItemsSource.Count, Converter={StaticResource RevertedQuestEmptyBoolConverter}}">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_quests_markall]}"/>
+                        </Label.Content>
+                    </Label>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,0" Visibility="{ Binding ElementName=questsGrid, Path=ItemsSource.Count, Converter={StaticResource RevertedQuestEmptyBoolConverter}}">
+                        <ComboBox x:Name="QuestsStatusesBox" Margin="5,0" Width="200"/>
+                        <Button x:Name="QuestsStatusesButton" Content="{Binding locale[tab_quests_editallbutton]}" Margin="5,0" Width="100" Click="QuestsStatusesButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_hideout_title]}" Name="tabhideout" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="hideoutGrid" Grid.Row="0" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_hideout_area], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_hideout_level], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid Grid.Column="1" Grid.Row="5" Margin="10,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0" Text="{Binding ElementName=hideoutarea_Level, Path=Value, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
+                                            <Slider x:Name="hideoutarea_Level" Grid.Column="1" Maximum="{Binding MaxLevel}" TickPlacement="BottomRight" TickFrequency="1" Value="{Binding CurrentLevel, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" IsSnapToTickEnabled="True" Margin="5" ValueChanged="hideoutarea_Level_ValueChanged"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button x:Name="HideoutMaximumButton" Content="{Binding locale[tab_hideout_maximumbutton]}" Grid.Row="1" HorizontalAlignment="Center" Margin="10,10,10,0" Width="200" Click="HideoutMaximumButton_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_skills_title]}" Name="tabskills" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="skillsGrid" Grid.Row="0" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_skills_skill], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_skills_exp], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid Grid.Column="1" Grid.Row="5" Margin="10,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0" Text="{Binding ElementName=commonskill_exp, Path=Value, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0"/>
+                                            <Slider x:Name="commonskill_exp" Grid.Column="1" Maximum="5100" TickPlacement="None" TickFrequency="1" Value="{Binding progress, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="5" IsSnapToTickEnabled="True" ValueChanged="commonskill_exp_ValueChanged"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_skills_setall]}"/>
+                        </Label.Content>
+                    </Label>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,0">
+                        <TextBox Text="{Binding ElementName=allskill_exp, Path=Value, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0" Width="60"/>
+                        <Slider x:Name="allskill_exp" Grid.Column="1" Maximum="5100" TickPlacement="None" TickFrequency="1" Value="0" VerticalAlignment="Center" Margin="5" IsSnapToTickEnabled="True" Width="200"/>
+                        <Button x:Name="SkillsExpButton" Content="{Binding locale[tab_quests_editallbutton]}" Margin="5,0" Width="100" Click="SkillsExpButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_mastering_title]}" Name="tabmastering" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="masteringsGrid" Grid.Row="0" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_mastering_weapon], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_mastering_exp], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid Grid.Column="1" Grid.Row="5" Margin="10,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0" Text="{Binding ElementName=masteringskill_exp, Path=Value, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,10,0" MinWidth="43"/>
+                                            <Slider x:Name="masteringskill_exp" Grid.Column="1" Maximum="{Binding Path=Max}" TickPlacement="None" TickFrequency="1" Value="{Binding progress, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="5" IsSnapToTickEnabled="True" ValueChanged="masteringskill_exp_ValueChanged"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Grid.Row="0" FontWeight="Bold" FontSize="18" Visibility="{ Binding ElementName=masteringsGrid, Path=ItemsSource.Count, Converter={StaticResource QuestEmptyBoolConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_mastering_nodata]}"/>
+                        </Label.Content>
+                    </Label>
+                    <Label Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0" Visibility="{ Binding ElementName=masteringsGrid, Path=ItemsSource.Count, Converter={StaticResource RevertedQuestEmptyBoolConverter}}">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_mastering_setall]}"/>
+                        </Label.Content>
+                    </Label>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,0" Visibility="{ Binding ElementName=masteringsGrid, Path=ItemsSource.Count, Converter={StaticResource RevertedQuestEmptyBoolConverter}}">
+                        <TextBox Text="{Binding ElementName=allmastering_exp, Path=Value, UpdateSourceTrigger=PropertyChanged }" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0" Width="60"/>
+                        <Slider x:Name="allmastering_exp" Grid.Column="1" TickPlacement="None" TickFrequency="1" Value="0" VerticalAlignment="Center" Margin="5" IsSnapToTickEnabled="True" Width="200"/>
+                        <Button x:Name="MasteringsExpButton" Content="{Binding locale[tab_quests_editallbutton]}" Margin="5,0" Width="100" Click="MasteringsExpButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_examineditems_title]}" Name="tabexamined" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="examinedGrid" Grid.Row="0" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_examineditems_item], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button x:Name="ExamineAllButton" Content="{Binding locale[tab_examineditems_exallbutton]}" Grid.Row="1" HorizontalAlignment="Center" Margin="10,10,10,0" Width="200" Click="ExamineAllButton_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_stash_title]}" Name="tabstash" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MaxHeight="50"/>
+                        <RowDefinition/>
+                        <RowDefinition MaxHeight="50"/>
+                        <RowDefinition  MaxHeight="120"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_stash_money]}"/>
+                        </Label.Content>
+                    </Label>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" x:Name="MoneysPanel">
+                        <iconPacks:PackIconFontAwesome Width="15" Height="15" VerticalAlignment="Center" Kind="RubleSignSolid" />
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,0,0">
+                            <Label.Content>
+                                <TextBlock x:Name="RublesLabel" TextWrapping="Wrap" Text="0"/>
+                            </Label.Content>
+                        </Label>
+                        <Button x:Name="AddRublesButton" Height="30" Width="30" Style="{DynamicResource MahApps.Styles.Button.Circle}" Click="ShowRublesAddDialog">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <iconPacks:PackIconFontAwesome Width="10" Height="10" VerticalAlignment="Center" Kind="PlusSolid" HorizontalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                        <iconPacks:PackIconFontAwesome Width="15" Height="15" VerticalAlignment="Center" Kind="EuroSignSolid" Margin="10,0,0,0" />
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,0,0">
+                            <Label.Content>
+                                <TextBlock x:Name="EurosLabel" TextWrapping="Wrap" Text="0"/>
+                            </Label.Content>
+                        </Label>
+                        <Button x:Name="AddEurosButton" Height="30" Width="30" Style="{DynamicResource MahApps.Styles.Button.Circle}" Click="ShowEurosAddDialog">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <iconPacks:PackIconFontAwesome Width="10" Height="10" VerticalAlignment="Center" Kind="PlusSolid" HorizontalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                        <iconPacks:PackIconFontAwesome Width="15" Height="15" VerticalAlignment="Center" Kind="DollarSignSolid" Margin="10,0,0,0" />
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,0,0">
+                            <Label.Content>
+                                <TextBlock x:Name="DollarsLabel" TextWrapping="Wrap" Text="0"/>
+                            </Label.Content>
+                        </Label>
+                        <Button x:Name="AddDollarsButton" Height="30" Width="30" Style="{DynamicResource MahApps.Styles.Button.Circle}" Click="ShowDollarsAddDialog">
+                            <Button.ContentTemplate>
+                                <DataTemplate>
+                                    <iconPacks:PackIconFontAwesome Width="10" Height="10" VerticalAlignment="Center" Kind="PlusSolid" HorizontalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </StackPanel>
+                    <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_stash_items]}"/>
+                        </Label.Content>
+                    </Label>
+                    <DataGrid x:Name="stashGrid" Grid.Column="1" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" Margin="0,0,0,10">
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_examineditems_item], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_info_id], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=id}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_backups_actions], Source={StaticResource proxy}}" Width="*" MaxWidth="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button x:Name="StashItemRemove" Margin="5" Content="{Binding Data.locale[tab_backups_remove], Source={StaticResource proxy}}" Click="StashItemRemove_Click"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button x:Name="DeleteAllButton" Grid.Column="1" Grid.Row="2" Content="{Binding locale[tab_stash_remove]}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" Click="DeleteAllButton_Click"/>
+                    <Grid Grid.Row="3" Grid.Column="1" x:Name="AddItemsGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MaxWidth="120"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="0,5">
+                            <Label.Content>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_stash_category]}"/>
+                            </Label.Content>
+                        </Label>
+                        <ComboBox x:Name="ItemCatSelector" Grid.Row="0" Grid.Column="1" SelectedValuePath="Value" DisplayMemberPath="Key" Margin="0,5"/>
+                        <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="0,5">
+                            <Label.Content>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_examineditems_item]}"/>
+                            </Label.Content>
+                        </Label>
+                        <ComboBox x:Name="ItemIdSelector" Grid.Row="1" Grid.Column="1" ItemsSource="{ Binding ElementName=ItemCatSelector, Path=SelectedValue, Converter={StaticResource ItemSelectorConverter}}" SelectedValuePath="Key" DisplayMemberPath="Value" Margin="0,5"/>
+                        <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="0,5">
+                            <Label.Content>
+                                <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_stash_amount]}"/>
+                            </Label.Content>
+                        </Label>
+                        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+                            <TextBox x:Name="ItemAddAmount" Text="1" PreviewTextInput="NumberValidationTextBox" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="0,5" Width="70" TextChanged="TextBox_TextChanged"/>
+                            <Button x:Name="AddItemButton" Margin="10,5,0,5" Width="190" Content="{Binding locale[tab_stash_add]}" IsEnabled="{Binding ElementName=ItemIdSelector, Path=SelectedValue, Converter={StaticResource ItemAddButtonConverter}}" Click="AddItemButton_Click">
+                                <Button.ContentTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconFontAwesome Width="18" Height="18" VerticalAlignment="Center" Kind="PlusSolid" />
+                                            <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="{Binding}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                    <Border x:Name="ItemsAddWarning" Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="2" Background="{DynamicResource MahApps.Brushes.AccentBase}">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Label HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="0,5" FontSize="20">
+                                <Label.Content>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_stash_warningtitle]}" TextAlignment="Center"/>
+                                </Label.Content>
+                            </Label>
+                            <Button x:Name="HideWarningButton" Margin="0,10,0,0" Content="{Binding locale[tab_stash_warningbutton]}" Click="HideWarningButton_Click"/>
+                        </StackPanel>
+                    </Border>
+                    <Border x:Name="ModItemsWarning" Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="2" Background="{DynamicResource MahApps.Brushes.AccentBase}" Visibility="Hidden">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Label HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="0,5" FontSize="20">
+                                <Label.Content>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_stash_moditems]}" TextAlignment="Center"/>
+                                </Label.Content>
+                            </Label>
+                            <Button x:Name="HideModWarningButton"  Margin="0,10,0,0" Content="{Binding locale[tab_stash_warningbutton]}" Click="HideModWarningButton_Click"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_clothing_title]}" Name="tabclothing" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid  x:Name="suitsGrid" Grid.Row="0" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_quests_name], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=Name}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_clothing_acquired], Source={StaticResource proxy}}" Width="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox x:Name="SuitBought" IsChecked="{Binding Path=Bought}" Checked="SuitBought_Checked" Unchecked="SuitBought_Unchecked"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Button x:Name="SuitsAcquireAll" Grid.Row="1" Content="{Binding locale[tab_clothing_acquireall]}" Width="200" Margin="5,10,5,0" Click="SuitsAcquireAll_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_backups_title]}" Name="tabbackups" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid x:Name="backupsGrid" Grid.Row="0" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxy" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_backups_date], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding Path=date, Converter={StaticResource BackupDateConverter}}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{Binding Data.locale[tab_backups_actions], Source={StaticResource proxy}}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button x:Name="backupRestore" Margin="5" Content="{Binding Data.locale[tab_backups_restore], Source={StaticResource proxy}}" Click="backupRestore_Click"/>
+                                            <Button x:Name="backupRemove" Margin="5" Content="{Binding Data.locale[tab_backups_remove], Source={StaticResource proxy}}" Click="backupRemove_Click"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{Binding locale[tab_about_title]}" Name="tababout" HeaderTemplate="{StaticResource HeaderTemplate}">
+                <StackPanel Margin="0,0,10,0">
+                    <Label Style="{DynamicResource DescriptionHeaderStyle}">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_about_text]}"/>
+                        </Label.Content>
+                    </Label>
+                    <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_about_developer]}"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Margin="6,0,0,5">
+                        <Hyperlink NavigateUri="https://github.com/themaoci" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">https://github.com/themaoci</Hyperlink>
+                    </TextBlock>
+                    <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_about_latestversion]}"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Margin="6,0,0,5">
+                        <Hyperlink NavigateUri="https://github.com/justemutarkov" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">https://github.com/justemutarkov</Hyperlink>
+                    </TextBlock>
+                    <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_about_support]}"/>
+                        </Label.Content>
+                    </Label>
+                    <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="Ask on JET discord"/>
+                        </Label.Content>
+                    </Label>
+                    <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="JustEmuTarkov Official Discord"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Margin="6,0,0,5">
+                        <Hyperlink NavigateUri="https://discord.gg/T66tGKa" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">https://discord.gg/T66tGKa</Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+        <StackPanel Margin="10,0,10,5" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="ResetProfileButton" Content="{Binding locale[button_reloadprofile]}" Margin="10,5,5,0" Width="250" Click="ResetProfileButton_Click">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconFontAwesome Width="22"
+                                        Height="22"
+                                        VerticalAlignment="Center"
+                                        Kind="RedoSolid" />
+                            <TextBlock Margin="4 0 0 0"
+                         VerticalAlignment="Center"
+                         Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+            <Button x:Name="SaveProfileButton" Content="{Binding locale[button_saveprofile]}" Click="SaveProfileButton_Click" Margin="5,5,10,0" Width="250">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconFontAwesome Width="22"
+                                        Height="22"
+                                        VerticalAlignment="Center"
+                                        Kind="SaveRegular" />
+                            <TextBlock Margin="4 0 0 0"
+                         VerticalAlignment="Center"
+                         Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
+        </StackPanel>
+        <Border x:Name="SettingsBorder" Grid.RowSpan="2" Background="{DynamicResource MahApps.Brushes.Accent4}" BorderThickness="1" Visibility="Collapsed">
+            <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="1" Background="{DynamicResource MahApps.Brushes.Window.Background}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="270"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_settings_title]}"/>
+                        </Label.Content>
+                    </Label>
+                    <Button x:Name="TabSettingsClose" Grid.Column="2" Grid.Row="0" Content="{Binding locale[button_close]}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Width="80" Click="TabSettingsClose_Click" IsEnabled="{Binding options.EftServerPath, Converter={StaticResource ButtonBoolConverter}}"/>
+                    <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_settings_lang]}"/>
+                        </Label.Content>
+                    </Label>
+                    <ComboBox x:Name="langSelectBox" Grid.Column="2" Grid.Row="1" Margin="10,5,10,0" VerticalAlignment="Center" SelectedValuePath="Key" DisplayMemberPath="Value" SelectionChanged="langSelectBox_SelectionChanged" />
+                    <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_settings_server]}"/>
+                        </Label.Content>
+                    </Label>
+                    <Label  Grid.Column="1" Grid.Row="2" Foreground="Red" Visibility="{ Binding options.EftServerPath, Converter={StaticResource PathBoolConverter}}" ToolTip="{Binding locale[invalid_server_location_text]}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <iconPacks:PackIconFontAwesome Kind="ExclamationTriangleSolid" Width="24" Height="24"/>
+                    </Label>
+                    <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0" >
+                        <TextBox x:Name="serverPath" TextWrapping="Wrap" Text="{Binding options.EftServerPath}" IsEnabled="False" Width="165"/>
+                        <Button x:Name="serverSelect" Content="{Binding locale[button_select]}" Margin="5,0,0,0" Click="serverSelect_Click" Width="80"/>
+                    </StackPanel>
+                    <Label Grid.Column="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_settings_account]}"/>
+                        </Label.Content>
+                    </Label>
+                    <Label Grid.Column="1" Grid.Row="3" Foreground="Red" Visibility="{ Binding options.EftServerPath, Converter={StaticResource ProfileBoolConverter}}" ToolTip="{Binding locale[no_accounts]}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <iconPacks:PackIconFontAwesome Kind="ExclamationTriangleSolid" Width="24" Height="24"/>
+                    </Label>
+                    <ComboBox x:Name="profileSelectBox" Grid.Column="2" Grid.Row="3" Margin="10,5,10,0" VerticalAlignment="Center" ItemsSource="{Binding Profiles}" SelectedItem="{Binding options.DefaultProfile}" SelectionChanged="profileSelectBox_SelectionChanged"/>
+                    <Label Grid.Column="0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_settings_colorscheme]}"/>
+                        </Label.Content>
+                    </Label>
+                    <ComboBox x:Name="StyleChoicer" Grid.Column="2" Grid.Row="4" Margin="10,5,10,0" VerticalAlignment="Center" SelectionChanged="StyleChoicer_SelectionChanged" >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="30" Height="15" Fill="{Binding Path=Color}"/>
+                                    <Label Content="{Binding Path=Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+            </Border>
+        </Border>
+    </Grid>
+</mah:MetroWindow>
