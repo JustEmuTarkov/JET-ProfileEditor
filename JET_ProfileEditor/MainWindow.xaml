@@ -596,44 +596,37 @@
             </TabItem>
             <TabItem Header="{Binding locale[tab_about_title]}" Name="tababout" HeaderTemplate="{StaticResource HeaderTemplate}">
                 <StackPanel Margin="0,0,10,0">
-                    <Label Style="{DynamicResource DescriptionHeaderStyle}">
-                        <Label.Content>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_about_text]}"/>
-                        </Label.Content>
-                    </Label>
                     <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
                         <Label.Content>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_about_developer]}"/>
+                            <TextBlock TextWrapping="Wrap" Text="Created by SkiTles55"/>
                         </Label.Content>
                     </Label>
                     <TextBlock Margin="6,0,0,5">
-                        <Hyperlink NavigateUri="https://github.com/themaoci" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">https://github.com/themaoci</Hyperlink>
+                        <Hyperlink NavigateUri="https://github.com/SkiTles55" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">github.com/SkiTles55</Hyperlink>
                     </TextBlock>
                     <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
                         <Label.Content>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_about_latestversion]}"/>
+                            <TextBlock TextWrapping="Wrap" Text="Modded by TheMaoci"/>
                         </Label.Content>
                     </Label>
                     <TextBlock Margin="6,0,0,5">
-                        <Hyperlink NavigateUri="https://github.com/justemutarkov" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">https://github.com/justemutarkov</Hyperlink>
+                        <Hyperlink NavigateUri="https://github.com/themaoci" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">github.com/themaoci</Hyperlink>
                     </TextBlock>
-                    <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
-                        <Label.Content>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding locale[tab_about_support]}"/>
-                        </Label.Content>
-                    </Label>
-                    <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
-                        <Label.Content>
-                            <TextBlock TextWrapping="Wrap" Text="Ask on JET discord"/>
-                        </Label.Content>
-                    </Label>
                     <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
                         <Label.Content>
                             <TextBlock TextWrapping="Wrap" Text="JustEmuTarkov Official Discord"/>
                         </Label.Content>
                     </Label>
                     <TextBlock Margin="6,0,0,5">
-                        <Hyperlink NavigateUri="https://discord.gg/T66tGKa" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">https://discord.gg/T66tGKa</Hyperlink>
+                        <Hyperlink NavigateUri="https://discord.gg/T66tGKa" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">discord.gg/T66tGKa</Hyperlink>
+                    </TextBlock>
+                    <Label Style="{DynamicResource DescriptionHeaderStyle}" Margin="0,5,0,0">
+                        <Label.Content>
+                            <TextBlock TextWrapping="Wrap" Text="JRT Official Discord"/>
+                        </Label.Content>
+                    </Label>
+                    <TextBlock Margin="6,0,0,5">
+                        <Hyperlink NavigateUri="https://discord.gg/7JhZHcP" RequestNavigate="Hyperlink_RequestNavigate" Style="{DynamicResource LinkStyle}">discord.gg/7JhZHcP</Hyperlink>
                     </TextBlock>
                 </StackPanel>
             </TabItem>

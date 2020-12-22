@@ -82,6 +82,14 @@ namespace JET_ProfileEditor
             "wild_feet_sklon"
         };
 
+        public class Customization
+        {
+		    public string Head { get; set; }
+            public string Body { get; set; }
+            public string Feet { get; set; }
+            public string Hands { get; set; }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -272,8 +280,6 @@ namespace JET_ProfileEditor
             if (Lang.Character.Inventory != null)
             {
                 Lang.characterInventory.InventoryItems = new List<InventoryItem>();
-                Console.WriteLine("LOADING INVENTORY");
-                Console.WriteLine(Lang.Character.Inventory.Stash);
                 foreach (var item in Lang.Character.Inventory.Items)
                 {
                     if (item.Tpl == moneyDol) Lang.characterInventory.Dollars += (int)item.Upd.StackObjectsCount;
@@ -281,11 +287,9 @@ namespace JET_ProfileEditor
                     if (item.Tpl == moneyRub) Lang.characterInventory.Rubles += (int)item.Upd.StackObjectsCount;
                     if (item.ParentId == Lang.Character.Inventory.Stash)
                     {
-                        Console.WriteLine("Adding item: " + item.Tpl);
                         Lang.characterInventory.InventoryItems.Add(new InventoryItem { id = item.Id, name = globalLang.Templates.ContainsKey(item.Tpl) ? globalLang.Templates[item.Tpl].Name : item.Tpl, tpl = item.Tpl });
                     }
                 }
-                Console.WriteLine(Lang.characterInventory.InventoryItems.Count);
             }
 
             ItemsForAdd = new Dictionary<string, Dictionary<string, string>>();
@@ -762,7 +766,10 @@ namespace JET_ProfileEditor
                     jobject.SelectToken("Skills").SelectToken("Mastering").Replace(JToken.FromObject(Lang.Character.Skills.Mastering));
             }
             jobject.SelectToken("Encyclopedia").Replace(JToken.FromObject(Lang.Character.Encyclopedia));
-            jobject.SelectToken("suits").Replace(JToken.FromObject(Lang.Character.Suits.ToArray()));
+
+            //need to be saved to player storage.json file
+            //jobject.SelectToken("suits").Replace(JToken.FromObject(Lang.Character.Suits.ToArray()));
+
             DateTime now = DateTime.Now;
             if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Backups")))
                 Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Backups"));
