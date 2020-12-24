@@ -18,8 +18,6 @@ using System.Diagnostics;
 using System.Windows.Navigation;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Net;
-using MessageBox = System.Windows.MessageBox;
 
 namespace JET_ProfileEditor
 {
