@@ -19,6 +19,7 @@ using System.Windows.Navigation;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Net;
+using MessageBox = System.Windows.MessageBox;
 
 namespace JET_ProfileEditor
 {
@@ -84,7 +85,7 @@ namespace JET_ProfileEditor
 
         public class Customization
         {
-		    public string Head { get; set; }
+            public string Head { get; set; }
             public string Body { get; set; }
             public string Feet { get; set; }
             public string Hands { get; set; }
@@ -92,6 +93,7 @@ namespace JET_ProfileEditor
 
         public MainWindow()
         {
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             InitializeComponent();
             infotab_Side.ItemsSource = new List<string> { "Bear", "Usec" };
             QuestsStatusesBox.ItemsSource = new List<string> { "Locked", "AvailableForStart", "Started", "Fail", "AvailableForFinish", "Success" };
@@ -102,6 +104,13 @@ namespace JET_ProfileEditor
             SaveProfileWorker = new BackgroundWorker();
             SaveProfileWorker.DoWork += SaveProfileWorker_DoWork;
             SaveProfileWorker.RunWorkerCompleted += SaveProfileWorker_RunWorkerCompleted;
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.ExceptionObject.ToString(), "Terminating Exception", MessageBoxButton.OK,
+                MessageBoxImage.Error);
+            Environment.Exit(1);
         }
 
         private void LoadDataWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -293,8 +302,8 @@ namespace JET_ProfileEditor
             }
 
             ItemsForAdd = new Dictionary<string, Dictionary<string, string>>();
-            foreach (var item in itemsDB.Where(x => x.Value.type == "Item" && x.Value.parent != null 
-                && globalLang.Templates.ContainsKey(x.Value.parent) 
+            foreach (var item in itemsDB.Where(x => x.Value.type == "Item" && x.Value.parent != null
+                && globalLang.Templates.ContainsKey(x.Value.parent)
                 && !x.Value.props.QuestItem && !BannedItems.Contains(x.Value.parent) && !BannedItems.Contains(x.Value.id)))
             {
                 string cat = globalLang.Templates[item.Value.parent].Name;
@@ -386,7 +395,7 @@ namespace JET_ProfileEditor
         private void CheckPockets()
         {
             if (Lang.Character == null || Lang.Character.Inventory == null) return;
-            if (Lang.Character.Inventory.Items.Where(x => x.Tpl == "557ffd194bdc2d28148b457f").Count() > 0) 
+            if (Lang.Character.Inventory.Items.Where(x => x.Tpl == "557ffd194bdc2d28148b457f").Count() > 0)
                 BigPocketsSwitcher.IsOn = false;
             if (Lang.Character.Inventory.Items.Where(x => x.Tpl == "5af99e9186f7747c447120b8").Count() > 0)
                 BigPocketsSwitcher.IsOn = true;
@@ -836,7 +845,7 @@ namespace JET_ProfileEditor
                 {
                     ExtMethods.Log($"backupRemove_Click | {ex.GetType().Name}: {ex.Message}");
                     await this.ShowMessageAsync(Lang.locale["invalid_server_location_caption"], $"{ex.GetType().Name}: {ex.Message}", MessageDialogStyle.Affirmative, new MetroDialogSettings { AffirmativeButtonText = Lang.locale["saveprofiledialog_ok"], AnimateShow = true, AnimateHide = true });
-                }                
+                }
                 LoadBackups();
             }
         }
@@ -855,7 +864,7 @@ namespace JET_ProfileEditor
                 {
                     ExtMethods.Log($"backupRestore_Click | {ex.GetType().Name}: {ex.Message}");
                     await this.ShowMessageAsync(Lang.locale["invalid_server_location_caption"], $"{ex.GetType().Name}: {ex.Message}", MessageDialogStyle.Affirmative, new MetroDialogSettings { AffirmativeButtonText = Lang.locale["saveprofiledialog_ok"], AnimateShow = true, AnimateHide = true });
-                } 
+                }
                 SaveAndReload();
                 LoadData();
             }
@@ -886,13 +895,13 @@ namespace JET_ProfileEditor
                     }
                     Lang.Character.Inventory.Items = items.ToArray();
                     LoadData();
-                }                
+                }
             }
         }
 
         private async void DeleteAllButton_Click(object sender, RoutedEventArgs e)
         {
-            if ( await this.ShowMessageAsync(Lang.locale["removestashitem_title"], Lang.locale["removestashitems_caption"], MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings { DefaultButtonFocus = MessageDialogResult.Affirmative, AffirmativeButtonText = Lang.locale["button_yes"], NegativeButtonText = Lang.locale["button_no"], AnimateShow = true, AnimateHide = true }) == MessageDialogResult.Affirmative)
+            if (await this.ShowMessageAsync(Lang.locale["removestashitem_title"], Lang.locale["removestashitems_caption"], MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings { DefaultButtonFocus = MessageDialogResult.Affirmative, AffirmativeButtonText = Lang.locale["button_yes"], NegativeButtonText = Lang.locale["button_no"], AnimateShow = true, AnimateHide = true }) == MessageDialogResult.Affirmative)
             {
                 var items = Lang.Character.Inventory.Items.ToList();
                 foreach (var Titem in Lang.characterInventory.InventoryItems.ToArray())
@@ -1037,8 +1046,8 @@ namespace JET_ProfileEditor
                         while (iDs.Contains(id))
                             id = ExtMethods.generateNewId();
                         iDs.Add(id);
-                        items.Add(new Character.Character_Inventory.Character_Inventory_Item 
-                        { 
+                        items.Add(new Character.Character_Inventory.Character_Inventory_Item
+                        {
                             Id = id,
                             ParentId = Lang.Character.Inventory.Stash,
                             SlotId = "hideout",
@@ -1056,7 +1065,7 @@ namespace JET_ProfileEditor
                     await this.ShowMessageAsync(Lang.locale["invalid_server_location_caption"], Lang.locale["tab_stash_noslots"], MessageDialogStyle.Affirmative, new MetroDialogSettings { AffirmativeButtonText = Lang.locale["saveprofiledialog_ok"], AnimateShow = true, AnimateHide = true });
                 }
             }
-        }  
+        }
 
         private int[,] getPlayerStashSlotMap()
         {
@@ -1155,7 +1164,7 @@ namespace JET_ProfileEditor
                             }
                         }
                         toDo.Remove(toDo.ElementAt(0));
-                    }                    
+                    }
                 }
             }
 
@@ -1177,8 +1186,8 @@ namespace JET_ProfileEditor
 
         private void HideWarningButton_Click(object sender, RoutedEventArgs e) => ItemsAddWarning.Visibility = ItemsAddWarning.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
 
-        private void HideModWarningButton_Click(object sender, RoutedEventArgs e) 
-        { 
+        private void HideModWarningButton_Click(object sender, RoutedEventArgs e)
+        {
             ModItemsWarning.Visibility = Visibility.Hidden;
             _modItemNotif = true;
         }
@@ -1187,8 +1196,8 @@ namespace JET_ProfileEditor
         {
             if (e.Cancel)
                 return;
-            
-            if (ExtMethods.ProfileChanged(Lang)  && _shutdown == false)
+
+            if (ExtMethods.ProfileChanged(Lang) && _shutdown == false)
             {
                 e.Cancel = true;
                 Dispatcher.BeginInvoke(new Action(async () => await ConfirmShutdown()));
