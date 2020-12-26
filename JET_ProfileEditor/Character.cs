@@ -146,7 +146,7 @@ namespace JET_ProfileEditor
                 {
 
                     [JsonProperty("StackObjectsCount")]
-                    public int? StackObjectsCount { get; set; }
+                    public long? StackObjectsCount { get; set; }
 
                     /// <summary>
                     /// Found in raid?
