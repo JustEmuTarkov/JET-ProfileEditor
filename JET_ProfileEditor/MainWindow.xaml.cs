@@ -188,8 +188,21 @@ namespace JET_ProfileEditor
         {
             serverGlobals = JsonConvert.DeserializeObject<ServerGlobals>(File.ReadAllText(Path.Combine(Lang.options.EftServerPath, "db", "cacheBase", "globals.json")));
             globalLang = JsonConvert.DeserializeObject<GlobalLang>(File.ReadAllText(Path.Combine(Lang.options.EftServerPath, "user", "cache", "locale_" + Lang.options.Language + ".json")));
-            itemsDB = new Dictionary<string, Item>();
-            itemsDB = JsonConvert.DeserializeObject<ItemsData>(File.ReadAllText(Path.Combine(Lang.options.EftServerPath, "user", "cache", "items.json"))).data;
+            try
+            {
+                itemsDB = JsonConvert.DeserializeObject<Dictionary<string, Item>>(
+                    File.ReadAllText(Path.Combine(Lang.options.EftServerPath, "user", "cache", "items.json")));
+            }
+            catch (Exception)
+            {
+                itemsDB = JsonConvert.DeserializeObject<ItemsData>(
+                    File.ReadAllText(Path.Combine(Lang.options.EftServerPath, "user", "cache", "items.json"))).data;
+            }
+
+            if (itemsDB == null)
+            {
+
+            }
             if (Lang.Character.Quests != null)
             {
                 Quests = new List<Quest>();
