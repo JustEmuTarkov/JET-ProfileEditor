@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using MahApps.Metro.Controls;
@@ -244,7 +244,8 @@ namespace JET_ProfileEditor
                     if (globalLang.Interface.ContainsKey(skill.Id))
                         commonSkills.Add(new SkillInfo { progress = (int)skill.Progress, name = globalLang.Interface[skill.Id], id = skill.Id });
                 }
-                foreach (var md in serverGlobals.config.Mastering)
+                //changed ...config... to ...data.config... -Fenex
+                foreach (var md in serverGlobals.data.config.Mastering)
                 {
                     string weapons = string.Empty;
                     foreach (var tmp in md.Templates.Where(x => globalLang.Templates.ContainsKey(x)))
@@ -268,7 +269,8 @@ namespace JET_ProfileEditor
                         temp.Add(add);
                     Lang.Character.Skills.Mastering = temp.ToArray();
                 }
-                Dispatcher.Invoke(() => { allmastering_exp.Maximum = serverGlobals.config.Mastering.OrderByDescending(x => x.Level3).First()?.Level3 ?? 1000; });
+                //changed ...config... to ...data.config... -Fenex
+                Dispatcher.Invoke(() => { allmastering_exp.Maximum = serverGlobals.data.config.Mastering.OrderByDescending(x => x.Level3).First()?.Level3 ?? 1000; });
             }
             if (Lang.Character.TraderStandings != null)
             {

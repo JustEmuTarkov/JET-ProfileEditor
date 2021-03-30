@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -195,6 +195,14 @@ namespace JET_ProfileEditor
     }
 
     public class ServerGlobals
+    {
+        //moved the Global Declaration to the Data Class -Fenex
+        public Data data { get; set; }
+    }
+
+    //basicly a dirty fix adding compatibility for the "data" json node right before the "config" json node -Fenex
+    //"HealthEffect" and "ItemPreset" related stuff might not work in the profile editor since the json path changed -Fenex
+    public class Data
     {
         public Global config { get; set; }
     }
